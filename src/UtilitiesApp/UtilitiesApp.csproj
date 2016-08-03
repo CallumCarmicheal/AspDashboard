@@ -81,10 +81,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalPanel-Utilites\CalPanel-Utilites.csproj">
+    <ProjectReference Include="..\Utilites\Utilites.csproj">
       <Project>{c27600cf-838f-41b9-bea9-079d6570f521}</Project>
-      <Name>CalPanel-Utilites</Name>
-      <Private>True</Private>
+      <Name>Utilites</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -20,8 +20,6 @@ namespace UtilitiesApp {
             bool oState = BCrypt.CheckPassword(iPass, iSalt);
 
             phDEState.Text = "oState: " + oState;
-
-
             phDEState.ForeColor = oState ? Color.Green : Color.Red;
         }
 
