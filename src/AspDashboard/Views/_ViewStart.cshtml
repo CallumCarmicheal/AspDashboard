@@ -1,0 +1,33 @@
+﻿@{ 
+
+    // Here i should create a temp variable that can be accessed
+    // via all pages!
+
+    // Check if database is down!
+    MySql.Data.MySqlClient.MySqlConnection con = null;
+    bool isOpen = AspDashboard.Classes.Database.Configuration.open(con);
+
+    if(!isOpen) {
+        Response.Write("Could not connect to mysql database!");
+        Response.Close();
+    }
+
+
+    // Do a test
+    if (PageData.ContainsKey("CalledIndex")) {
+        int x = PageData["CalledIndex"];
+        x++; PageData["CalledIndex"] = x;
+    } else {
+        PageData["CalledIndex"] = 0;
+    }
+
+    // Check if logged in!
+    if (Session["User"] == null) {
+        Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout_Login.cshtml";
+    } else //*/ 
+    { 
+        Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout_Dashboard.cshtml";
+    }
+
+    
+}
