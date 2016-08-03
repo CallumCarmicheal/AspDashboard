@@ -151,9 +151,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Classes\Authentication\Login.cs" />
+    <Compile Include="Classes\Authentication\Register.cs" />
     <Compile Include="Classes\Authentication\User.cs" />
     <Compile Include="Classes\Database\Configuration.cs" />
     <Compile Include="Classes\AppVariables.cs" />
+    <Compile Include="Classes\Util\Config.cs" />
     <Compile Include="Classes\Util\Logging.cs" />
     <Compile Include="Classes\Navigation\Navbar.cs" />
     <Compile Include="Classes\Navigation\NavbarElement.cs" />
@@ -179,6 +181,7 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Server\SQL\Table - Users.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -195,7 +198,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Classes\Extensions\" />
-    <Folder Include="Server\SQL\" />
     <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +229,9 @@
       <Project>{c27600cf-838f-41b9-bea9-079d6570f521}</Project>
       <Name>Utilites</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Server\README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

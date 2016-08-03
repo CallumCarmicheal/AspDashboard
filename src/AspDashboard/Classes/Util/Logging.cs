@@ -42,16 +42,31 @@ namespace AspDashboard.Classes.Util {
             if(cfg.PrintToDebug) System.Diagnostics.Debugger.Log(0, cfg.Category, format);
         }
 
+        public void WriteLineClass(string Class, string Method, string Message) {
+            if (!cfg.Enabled) return;
+
+            string format = "({Date} [{Category}]) [{Class}.{Method}] {Message}\n";
+            format = format.
+                Replace("{Date}",       getDate()).
+                Replace("{Category}",   cfg.Category).
+                Replace("{Controller}", Class).
+                Replace("{Action}",     Method).
+                Replace("{Message}",    Message);
+
+
+            if (cfg.PrintToDebug) System.Diagnostics.Debugger.Log(0, cfg.Category, format);
+        }
+
         public void WriteLineCtrl(string Controller, string Action, string Message) {
             if (!cfg.Enabled) return;
 
             string format = "({Date} [{Category}]) [{Controller}.{Action}] {Message}\n";
             format = format.
-                Replace("{Date}", getDate()).
-                Replace("{Category}", cfg.Category).
+                Replace("{Date}",       getDate()).
+                Replace("{Category}",   cfg.Category).
                 Replace("{Controller}", Controller).
-                Replace("{Action}", Action).
-                Replace("{Message}", Message);
+                Replace("{Action}",     Action).
+                Replace("{Message}",    Message);
 
 
             if (cfg.PrintToDebug) System.Diagnostics.Debugger.Log(0, cfg.Category, format);

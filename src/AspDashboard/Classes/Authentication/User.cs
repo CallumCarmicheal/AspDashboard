@@ -64,6 +64,20 @@ namespace AspDashboard.Classes.Authentication {
     }
 
     public class UserEngine {
+        public bool userExists(string Username) {
+            string sql = "SELECT id FROM users WHERE username=@userid LIMIT 1";
+
+            MySql.Data.MySqlClient.MySqlConnection con = null;
+            var result = Database.Configuration.open(ref con);
+
+            if (!result) return true;
+
+            var cdm = new MySql.Data.MySqlClient.MySqlCommand(sql, con);
+            cdm.Parameters.AddWithValue("@userid", Username);
+            using (var res = cdm.ExecuteReader()) 
+                return res.HasRows; // If the reader has a row then the user exists. Simple right?
+        }
+
         public IUserResult getUserViaID(int id) {
             // Return default (DOES NOT EXIST)
             return new IUserResult();

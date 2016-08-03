@@ -23,20 +23,24 @@ namespace AspDashboard.Classes.Database {
             }
         }
 
-        public static bool open(MySqlConnection con) {
+        public static bool open(ref MySqlConnection con) {
             try {
                 con = new MySqlConnection(toString());
                 con.Open();
 
+                AppVariables.Loggers.Info.WriteLineClass("Database.Configuration", "open", "Opening Connection: " + con.State.ToString());
                 return (con.State == System.Data.ConnectionState.Open);
             } catch (MySqlException ex) {
+                AppVariables.Loggers.Info.WriteLineClass("Database.Configuration", "open", "Error while opening connection: " + ex.Message);
+                throw;
+
                 //HttpContext.Current.Response.Clear();
                 //HttpContext.Current.Response.Write("MYSQL ERROR: " + ex.Message + "<br>REQUEST STRING: " + toString());
                 //HttpContext.Current.Response.Close();
 
 
                 //#if (DEBUG)
-                    throw ex;
+                //    throw ex;
                 //#endif
 
                 return false;

@@ -1,19 +1,24 @@
-﻿@{ 
+﻿@using AspDashboard.Classes.Util;
+@{ 
     HelperResult hr = RenderBody();
+
+    // For optimisation call this once instead of 9 million times to display the HTMLSTRING
+    var pageName = (new HtmlString(Config.Get().GetString("site_name")));
 }
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="viewport"    content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="author"      content="" />
+
     <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
 
-    <title>Please Login - CalPanel</title>
+    <title>Please Login - @pageName</title>
 
     @Html.Action("StyleResources", "Template", new { vB = @ViewBag })
 </head>
@@ -51,27 +56,63 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6">
-                    <form role="form" method="POST" id="login">
-                        <h4> Login with <strong>CalPanel Account  :</strong></h4>
-                        <br />
+                <div class="col-md-6" style="margin-left: 15px;">
+                    <div class="row">
+                        <form role="form" method="POST" id="login">
+                            <h4> Login with <strong>@pageName Account  :</strong></h4>
+                            <hr />
 
-                        <div class="form-group">
-                            <label class="control-label" for="username">User ID:</label>
-                            <input type="text" class="form-control input-dark" name="username" id="username" autocomplete="off" />
-                        </div>
+                            <div class="form-group">
+                                <label class="control-label" for="username">User ID:</label>
+                                <input type="text" class="form-control input-dark" name="username" id="username" autocomplete="off" />
+                            </div>
 
-                        <div class="form-group">
-                            <label class="control-label" for="passwd">Password:</label>
-                            <input type="password" class="form-control" name="passwd" id="passwd" autocomplete="off" />
-                        </div>
+                            <div class="form-group">
+                                <label class="control-label" for="passwd">Password:</label>
+                                <input type="password" class="form-control" name="passwd" id="passwd" autocomplete="off" />
+                            </div>
 
-                        <hr />
-                        <a id="btnSubmit" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </a>&nbsp;
-                    </form>
+                            <a id="btnSubmit" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </a>&nbsp;
+                        </form>
+                    </div>
+
+                    <br /><br />
+
+                    <div class="row">
+
+                        @if (Config.Get().GetBool("registration_enabled", false)) {
+                            <!-- REASON FOR USING THE "REGISTER WITH: " KEYWORD IS THERE WILL BE GOOGLE REGISTER SUPPORT, FACEBOOK (MAYBE) AND TWITTER IF REQUESTED! -->
+                            <form role="form" method="POST" id="register">
+                                <h4> Register with <strong>@pageName Account  :</strong></h4>
+                                <hr />
+
+                                <div class="form-group">
+                                    <label class="control-label" for="username">User ID:</label>
+                                    <input type="text" class="form-control input-dark" name="rUser" id="rUser" autocomplete="off" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" for="passwd">Password:</label>
+                                    <input type="password" class="form-control" name="rPass" id="rPass" autocomplete="off" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" for="email">Email:</label>
+                                    <input type="email" class="form-control" name="rEmail" id="rEmail" autocomplete="off" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" for="email">Full Name:</label>
+                                    <input type="text" class="form-control" name="rName" id="rName" autocomplete="off" />
+                                </div>
+
+                                <a id="btnSubmitReg" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Register </a>&nbsp;
+                            </form>
+                        }
+                    </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-5" style="float:right;">
                     <div class="alert alert-info">
                         This is a free bootstrap admin template with basic pages you need to craft your project.
                         Use this template for free to use for personal and commercial use.
@@ -95,37 +136,20 @@
                         </ul>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <form role="form" method="POST" id="register">
-                        <h4> Register with <strong>CalPanel Account  :</strong></h4>
-                        <br />
+            <hr />
 
-                        <div class="form-group">
-                            <label class="control-label" for="username">User ID:</label>
-                            <input type="text" class="form-control input-dark" name="rUser" id="rUser" autocomplete="off" />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="passwd">Password:</label>
-                            <input type="password" class="form-control" name="rPass" id="rPass" autocomplete="off" />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="email">Email:</label>
-                            <input type="email" class="form-control" name="rEmail" id="rEmail" autocomplete="off" />
-                        </div>
-
-                        <hr />
-                        <a id="btnSubmitReg" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </a>&nbsp;
-                    </form>
+            <div class="row">
+                <div class="col-md-6">
+                    
                 </div>
             </div>
         </div>
     </div>
 
     <!-- CONTENT-WRAPPER SECTION END-->
-    @Html.Action("Footer", "Template", new { vB = @ViewBag })
+    @Html.Action("Footer",          "Template", new { vB = @ViewBag })
     @Html.Action("ScriptResources", "Template", new { vB = @ViewBag })
 
 
@@ -196,40 +220,41 @@
 			$("#iU").focus();
 
             // Allow Submitting the Login Form from Anchor
-			$("#btnSubmit").click(function () {
-			    $('#login').submit();
-			});
+			$("#btnSubmit")     .click(function () { $('#login').submit();    });
+			$("#btnSubmitReg")  .click(function () { $('#register').submit(); });
 
 
 			$("#register").validate({
 			    rules: {
-			        rUser:  { required: true },
-			        rPass:  { required: true },
-			        rEmail: { required: true, email: true }
+			        rUser:  { required: true, minlength: 5, maxlength: 80  },
+			        rPass:  { required: true, minlength: 5, maxlength: 90  },
+			        rEmail: { required: true, maxlength: 200, email: true  },
+			        rName:  { required: true, minlength: 5, maxlength: 250 }
 			    },
 
 			    messages: {
-			        rUser:  { required: 'Please enter your user id.' },
-			        rPass:  { required: 'Please enter your password.' },
-			        rEmail: { required: 'Please enter your email.' }
+			        rUser:  { required: 'Please enter your user id.'      },
+			        rPass:  { required: 'Please enter your password.'     },
+			        rEmail: { required: 'Please enter your email.'        },
+			        rName:  { required: 'Please enter in your Full Name.' }
 			    },
 
 			    // Form Processing via AJAX
 			    submitHandler: function (form) {
 			        var opts = {
-			            "closeButton": true,
-			            "debug": false,
-			            "positionClass": "toast-bottom-full-width",
-			            "onclick": null,
-			            "showDuration": "300",
-			            "hideDuration": "1000",
-			            "timeOut": "5000",
-			            "extendedTimeOut": "1000",
-			            "showEasing": "swing",
-			            "hideEasing": "linear",
-			            "showMethod": "fadeIn",
-			            "hideMethod": "fadeOut",
-			            "preventDuplicates": true
+			            "closeButton":          true,
+			            "debug":                false,
+			            "positionClass":        "toast-bottom-full-width",
+			            "onclick":              null,
+			            "showDuration":         "300",
+			            "hideDuration":         "1000",
+			            "timeOut":              "5000",
+			            "extendedTimeOut":      "1000",
+			            "showEasing":           "swing",
+			            "hideEasing":           "linear",
+			            "showMethod":           "fadeIn",
+			            "hideMethod":           "fadeOut",
+			            "preventDuplicates":    true
 			        };
 
 			        $.ajax({
@@ -240,7 +265,8 @@
 			                do_login:   true,
 			                rUser:      $(form).find('#rUser').val(),
 			                rPass:      $(form).find('#rPass').val(),
-			                rEmail:     $(form).find('#rEmail').val()
+			                rEmail:     $(form).find('#rEmail').val(),
+			                rName:      $(form).find('#rName').val()
 			            },
 
 			            success: function (resp) {
@@ -255,7 +281,6 @@
 			        });
 			    }
 			});
-
 		});
     </script>
 </body>

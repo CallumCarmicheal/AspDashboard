@@ -1,16 +1,17 @@
-﻿@{ 
-
+﻿@{
     // Here i should create a temp variable that can be accessed
     // via all pages!
 
     // Check if database is down!
     MySql.Data.MySqlClient.MySqlConnection con = null;
-    bool isOpen = AspDashboard.Classes.Database.Configuration.open(con);
+    bool isOpen = AspDashboard.Classes.Database.Configuration.open(ref con);
 
-    if(!isOpen) {
+    if(!isOpen && !(con.State == System.Data.ConnectionState.Open)) {
+        Response.Clear();
         Response.Write("Could not connect to mysql database!");
+        Response.Flush();
         Response.Close();
-    }
+    } con.CloseAsync();
 
 
     // Do a test
@@ -25,9 +26,9 @@
     if (Session["User"] == null) {
         Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout_Login.cshtml";
     } else //*/ 
-    { 
+    {
         Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout_Dashboard.cshtml";
     }
 
-    
+
 }
