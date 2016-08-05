@@ -5,6 +5,7 @@ Framework:
 - [ ] Add Exceptions where required.
 - [ ] User friendly error exceptions (RELEASE BUILD)
 - [X] Configuration via Database
+- [ ] A way to keep sessions from being recycled after restart or change.
 
 Users:
 - [ ] User Manager in Website and the Utilities-APP

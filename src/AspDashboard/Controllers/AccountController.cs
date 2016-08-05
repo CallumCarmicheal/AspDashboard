@@ -116,11 +116,12 @@ namespace AspDashboard.Controllers {
 
                 // TODO: REMOVE THIS WHEN NOT TESTING
                 // IT WILL EXPOSE USER PASSWORDS INTO THE LOG FILE!
-                string logStr = string.Join(", ",
-                                Request.Form
-                                    .AllKeys
-                                    .Select(key => key + ": " + Request.Form[key])
-                                .ToArray());
+                string logStr = 
+                    string.Join(", ",
+                        Request.Form
+                          .AllKeys
+                          .Select(key => key + ": " + Request.Form[key])
+                        .ToArray());
                 Log("Session_Register", logStr);
 
                 /* Check if the user or pass exists and is not null */ {
@@ -164,8 +165,7 @@ namespace AspDashboard.Controllers {
                         emailValid = emailValid ? email.Length >= 5   : false;
                         emailValid = emailValid ? email.Length <= 250 : false;
                         Log("Session_Register", $"Validation (#3): userValid={userValid}, passValid={passValid}, emailValid={emailValid}, rnamValid={rnamValid}.");
-
-
+                        
                         // Check if everything is valid
                         everythingValid = (userValid && passValid && emailValid && rnamValid);
                     } else {
@@ -176,6 +176,13 @@ namespace AspDashboard.Controllers {
 
                 /* Attempt to create the user account if everything checks out */ {
                     if(everythingValid) {
+                        var ae = new UserEngine();
+                        if(ae.userExists(user)) {
+                            Log("Session_Register", $"User already exists: Username={user}");
+                            return Session_Ajax_Resp(false, "User is already registered!");
+                        }
+
+
                         Register reg = new Register();
 
                         // With a tiny chance of the password
@@ -231,7 +238,7 @@ namespace AspDashboard.Controllers {
             Session.Clear();
             Session.Abandon();
 
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

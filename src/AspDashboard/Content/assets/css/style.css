@@ -318,3 +318,21 @@ footer {
 .btn-google {
     background-color: #c32f10;
 }
+
+
+
+
+/* ======================================== */
+.breadcrumb {
+    padding: 0px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: transparent;
+    border-radius: 4px;
+} .breadcrumb a {
+    color: #1E88E5;
+} .breadcrumb a :hover {
+	color: #1976D2;
+} li.breadcrumb-item.active {
+	color: #BDBDBD;
+}

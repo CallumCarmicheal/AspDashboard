@@ -1,11 +1,17 @@
-﻿@{ 
+﻿<!-- TODO: CALCULATE CURRENT PAGE -->
+@AspDashboard.Classes.Util.Templates.RenderTabItem("Dashboard", new string[] { "/", "/Home/Index" } )
+@AspDashboard.Classes.Util.Templates.RenderTabItem("Servers",   "/Home/Servers")
+@AspDashboard.Classes.Util.Templates.RenderTabItem("Settings",  "/Home/Settings")
 
+@{
+    // Display access to the AspDashboard Control Panel
+    var ur = AspDashboard.Classes.Authentication.UserEngine.getUser();
+    var al = ur.User.getAuthLevel();
+
+    if (al == AspDashboard.Classes.Authentication.EUserLevel.GlobalAdmin ||
+        al == AspDashboard.Classes.Authentication.EUserLevel.GlobalModerator) {
+        @AspDashboard.Classes.Util.Templates.RenderTabItem("ADCP", "/ADAdmin/Dashboard/Index")
+    }
 }
 
-
-
-<!-- TODO: CALCULATE CURRENT PAGE -->
-@AspDashboard.Classes.Util.Templates.RenderTabItem("Dashboard", "Home",     "Index")
-@AspDashboard.Classes.Util.Templates.RenderTabItem("Servers",   "Home",     "Index")
-@AspDashboard.Classes.Util.Templates.RenderTabItem("Settings",  "Home",     "Index")
-@AspDashboard.Classes.Util.Templates.RenderTabItem("Logout",    "Account",  "Session_Logoff")
+@AspDashboard.Classes.Util.Templates.RenderTabItem("Logout",  "/Account/Session_Logoff")

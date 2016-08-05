@@ -1,0 +1,25 @@
+﻿@{
+    // Here i should create a temp variable that can be accessed
+    // via all pages!
+
+    // Check if database is down!
+    MySql.Data.MySqlClient.MySqlConnection con = null;
+    bool isOpen = AspDashboard.Classes.Database.Configuration.open(ref con);
+
+    if(!isOpen && !(con.State == System.Data.ConnectionState.Open)) {
+        Response.Clear(); Response.Write("Could not connect to mysql database!");
+        Response.Flush(); Response.End();
+    } con.Close();
+
+
+
+    // Check and see if the user is authorised to access this section 
+    if (Session["User"] == null) {
+        Response.Clear(); Response.Write("You are not authorised #0");
+        Response.Flush(); Response.End();
+    }
+
+    if((Session["User"] as IUserAccount))
+
+    //Response.Redirect("~/"); // Redirect to dashboard's home
+}

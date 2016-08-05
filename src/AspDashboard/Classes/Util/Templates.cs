@@ -3,35 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace AspDashboard.Classes.Util {
     public class Templates {
 
         // TODO: MAKE FUNCTION TO CALCULATE CURRENT AND HIGHLIGHT PAGE!
-        public static HtmlString RenderTabItem(string Name, string Controller, string Action, params string[] Args) {
-            UrlHelper Url = new UrlHelper();
-
-            string controllerName = "";
-            string actionName = "";
-            string locationRes = "";
+        public static HtmlString RenderTabItem(string Name, string Location, params string[] Args) {
             string classRes = "";
-            string returnResult = "";
-            bool isCurrentAction = false;
+            bool isCurrentPath = false;
 
-            var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
-            if (routeValues != null) {
-                if (routeValues.ContainsKey("action")) { actionName = routeValues["action"].ToString(); }
-                if (routeValues.ContainsKey("controller")) { controllerName = routeValues["controller"].ToString(); }
+            var appUrl = VirtualPathUtility.ToAbsolute("~/");       // create an absolute path for the application root
+            var relativeUrl = HttpContext.Current.Request.Url.
+                AbsolutePath.Remove(0, appUrl.Length - 1);          // remove the app path (exclude the last slash)
 
-                isCurrentAction = ((controllerName == Controller) && (actionName == Action));
-            }
+            isCurrentPath = (relativeUrl == Location);
+            if (isCurrentPath) { classRes = "menu-top-active"; }
 
-            if (isCurrentAction) {
-                classRes = "menu-top-active";
-            }
+            // Todo: Add Arguments
 
-            locationRes = Url.Action(Action, Controller);
-            return new HtmlString($"<li><a class=\"{classRes}\" href=\"{locationRes}\">{Name}</a></li>");
+            if (isCurrentPath)
+                 return new HtmlString($"<li><a class=\"{classRes}\" href=\"#\">{Name}</a></li>");
+            else return new HtmlString($"<li><a class=\"{classRes}\" href=\"{Location}\">{Name}</a></li>");
+        }
+
+        public static HtmlString RenderTabItem(string Name, string[] Locations, params string[] Args) {
+            string classRes = "";
+            bool isCurrentPath = false;
+
+            var appUrl = VirtualPathUtility.ToAbsolute("~/");       // create an absolute path for the application root
+            var relativeUrl = HttpContext.Current.Request.Url.
+                AbsolutePath.Remove(0, appUrl.Length - 1);          // remove the app path (exclude the last slash)
+
+            foreach(string x in Locations) 
+                isCurrentPath = isCurrentPath ? true : relativeUrl == x;
+            
+            if (isCurrentPath) { classRes = "menu-top-active"; }
+
+            // Todo: Add Arguments
+
+            if(isCurrentPath)
+                 return new HtmlString($"<li><a class=\"{classRes}\" href=\"#\">{Name}</a></li>");
+            else return new HtmlString($"<li><a class=\"{classRes}\" href=\"{Locations[0]}\">{Name}</a></li>");
         }
     }
 }

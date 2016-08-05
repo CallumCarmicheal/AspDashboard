@@ -1,4 +1,7 @@
-﻿@{
+﻿@using AspDashboard.Classes;
+@using AspDashboard.Classes.Authentication;
+
+@{
     // Here i should create a temp variable that can be accessed
     // via all pages!
 
@@ -13,14 +16,17 @@
         Response.Close();
     } con.CloseAsync();
 
+    // Run a test
+    if(Session["SynchTest"] == null) {
+        var ss = new AspDashboard.Classes.Util.SynchroObject();
+        ss.Value = 0;
 
-    // Do a test
-    if (PageData.ContainsKey("CalledIndex")) {
-        int x = PageData["CalledIndex"];
-        x++; PageData["CalledIndex"] = x;
+        Session.Add("SynchTest", ss);
     } else {
-        PageData["CalledIndex"] = 0;
+        var st = Session["SynchTest"] as AspDashboard.Classes.Util.SynchroObject;
+        st.Value = (int)st.Value + 1;
     }
+
 
     // Check if logged in!
     if (Session["User"] == null) {

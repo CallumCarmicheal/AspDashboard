@@ -23,7 +23,7 @@ namespace AspDashboard.Classes.Util {
 
         private string getDate() {
             if(cfg.PrependDate)
-                 return DateTime.Now.ToString("MM-dd-yy HH-MM-ss");
+                 return DateTime.Now.ToString("MM-dd-yy HH:MM:ss");
             else return "";
         }
 
@@ -49,8 +49,8 @@ namespace AspDashboard.Classes.Util {
             format = format.
                 Replace("{Date}",       getDate()).
                 Replace("{Category}",   cfg.Category).
-                Replace("{Controller}", Class).
-                Replace("{Action}",     Method).
+                Replace("{Class}", Class).
+                Replace("{Method}",     Method).
                 Replace("{Message}",    Message);
 
 
@@ -80,7 +80,6 @@ namespace AspDashboard.Classes.Util {
 
 
         public Logging() {
-
             Info = new Log(new LogConfig() {
                 Enabled         = true,
                 Category        = "Info",
@@ -89,6 +88,21 @@ namespace AspDashboard.Classes.Util {
                 WriteLog        = false
             });
 
+            Error = new Log(new LogConfig() {
+                Enabled      = true,
+                Category     = "Error",
+                PrependDate  = true,
+                PrintToDebug = true,
+                WriteLog     = false
+            });
+
+            Debug = new Log(new LogConfig() {
+                Enabled      = System.Diagnostics.Debugger.IsAttached,
+                Category     = "Debug",
+                PrependDate  = true,
+                PrintToDebug = true,
+                WriteLog     = false
+            });
         }
 
 

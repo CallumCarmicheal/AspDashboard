@@ -35,7 +35,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="index.html">
-                    <img src="Content/assets/img/logo.png" />
+                    <img src="~/Content/assets/img/logo.png" />
                 </a>
             </div>
 
@@ -79,7 +79,7 @@
                     <br /><br />
 
                     <div class="row">
-
+                        <br />
                         @if (Config.Get().GetBool("registration_enabled", false)) {
                             <!-- REASON FOR USING THE "REGISTER WITH: " KEYWORD IS THERE WILL BE GOOGLE REGISTER SUPPORT, FACEBOOK (MAYBE) AND TWITTER IF REQUESTED! -->
                             <form role="form" method="POST" id="register">
@@ -87,32 +87,37 @@
                                 <hr />
 
                                 <div class="form-group">
-                                    <label class="control-label" for="username">User ID:</label>
+                                    <label class="control-label" for="rUser">User ID:</label>
                                     <input type="text" class="form-control input-dark" name="rUser" id="rUser" autocomplete="off" />
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label" for="passwd">Password:</label>
+                                    <label class="control-label" for="rPass">Password:</label>
                                     <input type="password" class="form-control" name="rPass" id="rPass" autocomplete="off" />
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label" for="email">Email:</label>
+                                    <label class="control-label" for="rEmail">Email:</label>
                                     <input type="email" class="form-control" name="rEmail" id="rEmail" autocomplete="off" />
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label" for="email">Full Name:</label>
+                                    <label class="control-label" for="rName">Full Name:</label>
                                     <input type="text" class="form-control" name="rName" id="rName" autocomplete="off" />
                                 </div>
 
                                 <a id="btnSubmitReg" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Register </a>&nbsp;
+                                <a id="RegisterAutoFillForm" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Randomise Data </a>&nbsp;
                             </form>
                         }
                     </div>
                 </div>
 
                 <div class="col-md-5" style="float:right;">
+                    <div class="alert alert-dismissable alert-info">
+                        SynchroTest -> @(new HtmlString("" + ((int)((SynchroObject)Session["SynchTest"]).Value)))
+                    </div>
+
                     <div class="alert alert-info">
                         This is a free bootstrap admin template with basic pages you need to craft your project.
                         Use this template for free to use for personal and commercial use.
@@ -139,27 +144,42 @@
             </div>
 
             <hr />
-
-            <div class="row">
-                <div class="col-md-6">
-                    
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- CONTENT-WRAPPER SECTION END-->
-    @Html.Action("Footer",          "Template", new { vB = @ViewBag })
+    <!-- JAVASCRIPT CONTENT AND FOOTER (PLACE BEFORE ANY PAGE SCRIPTS) -->
+    @Html.Action("Footer", "Template", new { vB = @ViewBag })
     @Html.Action("ScriptResources", "Template", new { vB = @ViewBag })
-
 
     <!-- Login Script -->
     <script type="text/javascript">
-        var $passwd = $('#passwd');
+        var getRandomWord = function () {
+            var words = ["monitor", "program", "application", "keyboard", "javascript", "gaming", "network"];
+            return words[Math.floor(Math.random() * words.length)];
+        }; var getRandomNumber = function () {
+            return Math.floor(Math.random(0, 99) * 100);
+        }
+        
+        var formValidation = {};
+        jQuery(document).ready(function ($) {
+            var $passwd = $('#passwd');
 
-		jQuery(document).ready(function($) {
+            // Autofill form for Development purposes
+            $("#RegisterAutoFillForm").click(function () {
+                var username    = getRandomWord() + getRandomNumber();
+                var data = {
+                    rUser:  username,
+                    rPass:  username,
+                    rEmail: username + "@@example.com",
+                    rName:  getRandomWord() + getRandomWord()
+                };
+
+                $("#register").autofill(data);
+            });
+
+
 			// Validation and Ajax action
-			$("#login").validate({
+            formValidation.LoginForm = $("#login").validate({
 				rules: {
 					username:   { required: true },
 					passwd:     { required: true }
@@ -189,8 +209,8 @@
 					};
 
 					$.ajax({
-					    url: "Account/Session_Login",
-						method: 'POST',
+					    url:      "/Account/Session_Login",
+						method:   'POST',
 						dataType: 'json',
 						data: {
 							do_login: true,
@@ -223,8 +243,12 @@
 			$("#btnSubmit")     .click(function () { $('#login').submit();    });
 			$("#btnSubmitReg")  .click(function () { $('#register').submit(); });
 
+            // Allow enter to submit the form
+			$("#passwd")        .keypress(function (e) { if (e.which == 13) { $('#login').submit(); } });
+			$("#rName")         .keypress(function (e) { if (e.which == 13) { $('#register').submit(); } });
 
-			$("#register").validate({
+            // Validate our registration form
+			formValidation.Registration = $("#register").validate({
 			    rules: {
 			        rUser:  { required: true, minlength: 5, maxlength: 80  },
 			        rPass:  { required: true, minlength: 5, maxlength: 90  },
@@ -283,5 +307,6 @@
 			});
 		});
     </script>
+
 </body>
 </html>

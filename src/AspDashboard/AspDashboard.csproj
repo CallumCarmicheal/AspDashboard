@@ -150,19 +150,24 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\ADAdmin\ADAdminAreaRegistration.cs" />
     <Compile Include="Classes\Authentication\Login.cs" />
     <Compile Include="Classes\Authentication\Register.cs" />
     <Compile Include="Classes\Authentication\User.cs" />
     <Compile Include="Classes\Database\Configuration.cs" />
     <Compile Include="Classes\AppVariables.cs" />
+    <Compile Include="Classes\Database\ReaderHelper.cs" />
     <Compile Include="Classes\Util\Config.cs" />
+    <Compile Include="Classes\Util\ErrorHandler.cs" />
     <Compile Include="Classes\Util\Logging.cs" />
     <Compile Include="Classes\Navigation\Navbar.cs" />
     <Compile Include="Classes\Navigation\NavbarElement.cs" />
     <Compile Include="Classes\Util\Navigation.cs" />
     <Compile Include="Classes\Util\Templates.cs" />
+    <Compile Include="Classes\Util\SyncroObject.cs" />
     <Compile Include="Classes\Views\Template_Navbar_Params.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DevController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Global.asax.cs">
@@ -197,8 +202,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\ADAdmin\Controllers\" />
+    <Folder Include="Areas\ADAdmin\Models\" />
+    <Folder Include="Areas\ADAdmin\Views\Shared\" />
     <Folder Include="Classes\Extensions\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Dev\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -232,6 +241,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Server\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\ADAdmin\Views\web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\ADAdmin\Views\_ViewStart.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

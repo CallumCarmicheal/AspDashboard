@@ -4,10 +4,16 @@ using System.Linq;
 using System.Web;
 
 namespace AspDashboard.Classes.Authentication {
-    public enum IUserLevel {
-        GlobalAdmin         = 0,
-        GlobalModerator     = 1,
-        NormalUser          = 2
+    public enum EUserLevel {
+        GlobalAdmin     = 0,
+        GlobalModerator = 1,
+        NormalUser      = 2
+    }
+
+    public enum EUserState {
+        Disabled        = 0,
+        Enabled         = 1,
+        Banned          = 2
     }
 
     public class IUserAccount {
@@ -15,46 +21,48 @@ namespace AspDashboard.Classes.Authentication {
         private int         ID;
         private string      CUID;
         private string      Username;
-        private IUserLevel  AuthLevel;
+        private EUserLevel  AuthLevel;
+        private EUserState  State;
 
         // Extra Information
         private string      Email;
+        private string      Name;
 
         // User information
         private DateTime    DateCreated;
         private DateTime    LastAccess;
-
-        private bool        Enabled;
-        private bool        Banned;
         
         // GETTERS
         public int          getID()             { return this.ID; }
         public string       getCUID()           { return this.CUID; }
         public string       getUsername()       { return this.Username; }
-        public IUserLevel   getAuthLevel()      { return this.AuthLevel; }
-
+        public string       getName()           { return this.Name; }
         public string       getEmail()          { return this.Email; }
+
         public DateTime     getDateCreated()    { return this.DateCreated; }
         public DateTime     getLastAccess()     { return this.LastAccess; }
 
-        public bool         isEnabled()         { return (this.Banned ? false : this.Enabled); }
-        public bool         isBanned()          { return this.Banned; }
+        public EUserLevel getAuthLevel()        { return this.AuthLevel; }
+        public EUserState   getUserState()      { return this.State; }
+
+        public bool         isEnabled()         { return (this.State == EUserState.Enabled); }
+        public bool         isBanned()          { return (this.State == EUserState.Banned); }
 
 
         // Methods
         public bool hasCustomID()               { return string.IsNullOrWhiteSpace(this.CUID); }
 
 
-        public IUserAccount(int ID, string Username, IUserLevel AuthLevel, string Email, bool Enabled, DateTime DateCreated, DateTime LastAccess, string CUID = null, bool Banned = false) {
+        public IUserAccount(int ID, string Username, EUserLevel AuthLevel, string Name, string Email, DateTime DateCreated, DateTime LastAccess, string CUID = null, EUserState State = EUserState.Disabled) {
             this.ID             = ID;
             this.CUID           = CUID;         // Hidden Personalised Username     (Used for Logging In with more security: OPTIONAL)
             this.Username       = Username;     // Public Username                  (USED BY DEFAULT)
+            this.Name           = Name;
             this.AuthLevel      = AuthLevel;
+            this.State          = State;
             this.Email          = Email;
             this.DateCreated    = DateCreated;
             this.LastAccess     = LastAccess;
-            this.Enabled        = Enabled;
-            this.Banned         = Banned;
         }
     }
 
@@ -65,11 +73,10 @@ namespace AspDashboard.Classes.Authentication {
 
     public class UserEngine {
         public bool userExists(string Username) {
-            string sql = "SELECT id FROM users WHERE username=@userid LIMIT 1";
+            string sql = "SELECT id FROM users WHERE username=binary @userid";
 
             MySql.Data.MySqlClient.MySqlConnection con = null;
             var result = Database.Configuration.open(ref con);
-
             if (!result) return true;
 
             var cdm = new MySql.Data.MySqlClient.MySqlCommand(sql, con);
@@ -91,6 +98,24 @@ namespace AspDashboard.Classes.Authentication {
         public IUserResult getUserViaEmail(string Email) {
             // Return default (DOES NOT EXIST)
             return new IUserResult();
+        }
+
+        /// <summary>
+        /// Returns the currently logged in user!
+        /// </summary>
+        /// <returns></returns>
+        public static IUserResult getUser() {
+            IUserResult res = new IUserResult();
+
+            if (HttpContext.Current.Session["User"] == null) {
+                res.Exists = false;
+                return res;
+            }
+
+            IUserAccount user = HttpContext.Current.Session["User"] as IUserAccount;
+            res.User = user;
+            res.Exists = true;
+            return res;
         }
     }
 }
